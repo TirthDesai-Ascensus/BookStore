@@ -204,5 +204,34 @@ namespace BookStoreAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        /// <summary>
+        /// Retrieves the title of a book by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the book.</param>
+        /// <returns>The title of the book with the specified ID.</returns>
+        /// <response code="200">Returns the title of the book with the specified ID.</response>
+        /// <response code="404">If the book is not found.</response>
+        /// <response code="500">If there is an internal server error.</response>
+        [HttpGet("{id}/title")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<string>> GetBookTitle(int id)
+        {
+            try
+            {
+                var book = await _bookStoreDataService.GetBookByIdAsync(id);
+                return Ok(book.Title);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }
